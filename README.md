@@ -138,3 +138,98 @@ Note: replace rds-endpoint with actual endpoint value
 6. Exit Mariadb
 
         exit
+### Back to nginx-server
+
+## Now SSH into Tomcat Server
+1. Connect to Tomcat Server
+
+        ssh -i 3-tier-key.pem ec2-user@ip-of-tomcat-vm
+
+2. Switch to root user
+
+        sudo -i
+   
+3. Install Java
+
+        yum install java -y
+   
+4. Create a directory
+
+        mkdir /opt/tomcat
+   
+5. Download Tomcat tar file
+
+        curl -O https://dlcdn.apache.org/tomcat/tomcat-9/v9.0.90/bin/apache-tomcat-9.0.90.tar.gz
+   
+7. Extract the Tomcat tar file at /opt/tomcat location
+
+        tar -xzvf apache-tomcat-9.0.90.tar.gz -C /opt/tomcat
+
+8. Move to the following location
+
+        cd /opt/tomcat/apache-tomcat-9.0.90.tar.gz/webapps
+   
+9. Download the student.war file (Application)
+
+        curl -O https://s3-us-west-2.amazonaws.com/studentapi-cit/student.war
+
+10. Move to ../lib location
+
+        cd ../lib
+
+11. Download the MySQL Connector
+
+        curl -O https://s3-us-west-2.amazonaws.com/studentapi-cit/mysql-connector.jar
+
+##  MODIFY context.xml
+1. Move to the respective location
+
+        cd apache-tomcat-9.0.90.tar.gz/conf
+
+2. Open Context.xml in vim editor
+
+        vim context.xml
+
+3. Add below line [connection string] at line 21
+
+         <Resource name="jdbc/TestDB" auth="Container" type="javax.sql.DataSource"
+                       maxTotal="100" maxIdle="30" maxWaitMillis="10000"
+                       username="USERNAME" password="PASSWORD" driverClassName="com.mysql.jdbc.Driver"
+                       url="jdbc:mysql://DB-ENDPOINT:3306/DATABASE-NAME"/>
+
+4. Move to bin
+
+        cd ../bin
+
+5. Modifying Permissions
+
+        chmod +x catalina.sh
+
+6. Start Catalina.sh
+
+        ./catalina.sh start
+
+7. Exit the Tomcat Server
+
+       exit
+
+## Back to Nginx - Server
+1. Install Nginx Server
+
+        sudo yum install nginx -y
+
+2. Open nginx.conf file
+
+        sudo vim /etc/nginx/nginx.conf
+
+3. :set nu (enter below data in line 47 in between error and location)
+
+        location / {
+        proxy_pass http://private-IP-tomcat:8080/student/;
+        }
+
+4. Start Nginx Server
+
+        sudo systemctl start nginx
+
+# Go To Browser Hit Public-IP of Nginx Server

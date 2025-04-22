@@ -61,6 +61,9 @@
 5. Database-Server-Private
    - create in private subnet
    - allow port = 3306,22
+
+<img width="846" alt="image" src="https://github.com/user-attachments/assets/eb7a244c-870b-46f9-91cc-6e5dbea3417d" />
+
   
 ## Create Database In Aurora & RDS 
 - Go To Aurora & RDS
@@ -77,7 +80,12 @@
 - Create database
 - Edit security group -> Add 3306 port
 
-## Connect To Nginx-Server-Public 
+<img width="842" alt="image" src="https://github.com/user-attachments/assets/645313c9-7982-4f84-9e33-8ea32d958ff3" />
+
+
+## Connect To Nginx-Server-Public
+<img width="728" alt="image" src="https://github.com/user-attachments/assets/e14b315b-b154-478c-9c65-c4ea0ad168ca" />
+
 - connect to instance
 - change hostname
 - create file with name 3-tier-key.pem
@@ -86,6 +94,8 @@
 - copy private key and paste it here
 
 ## Now SSH into Database Server
+<img width="730" alt="image" src="https://github.com/user-attachments/assets/804934ab-c86e-4988-95e3-4da7aca4f29d" />
+
 1. Switch to root user
    
         sudo -i
@@ -103,6 +113,8 @@
         systemctl enable mariadb
 
 ## Log in into database
+<img width="834" alt="image" src="https://github.com/user-attachments/assets/8c4b14d7-405c-46ec-bc0c-8ca2d8383da0" />
+
     mysql -h rds-endpoint   -u admin -pPasswd123$
     
 Note: replace rds-endpoint with actual endpoint value
@@ -141,6 +153,8 @@ Note: replace rds-endpoint with actual endpoint value
 ### Back to nginx-server
 
 ## Now SSH into Tomcat Server
+<img width="718" alt="image" src="https://github.com/user-attachments/assets/585a9057-55c4-4b3d-8a5c-b8e9864c5e7a" />
+
 1. Connect to Tomcat Server
 
         ssh -i 3-tier-key.pem ec2-user@ip-of-tomcat-vm
@@ -196,6 +210,8 @@ Note: replace rds-endpoint with actual endpoint value
                        maxTotal="100" maxIdle="30" maxWaitMillis="10000"
                        username="USERNAME" password="PASSWORD" driverClassName="com.mysql.jdbc.Driver"
                        url="jdbc:mysql://DB-ENDPOINT:3306/DATABASE-NAME"/>
+    <img width="858" alt="image" src="https://github.com/user-attachments/assets/51d70c13-5c2d-4667-b58c-78e897808d97" />
+
 
 4. Move to bin
 
@@ -227,9 +243,13 @@ Note: replace rds-endpoint with actual endpoint value
         location / {
         proxy_pass http://private-IP-tomcat:8080/student/;
         }
+   <img width="741" alt="image" src="https://github.com/user-attachments/assets/e6f2d07b-7fa1-40d7-adb0-7476a84a471e" />
 
-4. Start Nginx Server
+
+5. Start Nginx Server
 
         sudo systemctl start nginx
 
 # Go To Browser Hit Public-IP of Nginx Server
+<img width="465" alt="image" src="https://github.com/user-attachments/assets/4b736c5b-9d0c-4e3e-8b4b-dee4d508c51e" />
+
